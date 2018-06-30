@@ -1,0 +1,76 @@
+---
+title: "R Notebook"
+output: 
+        html_notebook:
+                theme: journal
+---
+
+#Statistics Examples
+
+##Linear Regression
+*http://r-statistics.co/Linear-Regression.html*
+
+
+```{r}
+head(cars)
+```
+
+### Scatter Plot
+- Visualize the linear relationship between the predictor and the response.
+
+```{r}
+scatter.smooth(x=cars$speed, y=cars$dist, main="Dist - Speed")
+```
+
+###BoxPlot - Check for outliers
+- Any datapoint outside the 1.5* interquartile range is considered an outlier. IQR is the distance between the 25th and 75th percentiles for that variable.
+
+```{r}
+par(mfrow=c(1,2)) #divide graph area into 2 columns
+boxplot(cars$speed, main = "Speed", sub = paste("Outlier rows: ", boxplot.stats(cars$speed)$out)) #box plot for speed
+boxplot(cars$dist, main="Distance", sub = paste("Outlier rows: ", boxplot.stats(cars$dist)$out))  #box plot for distance
+```
+
+### Density Plot - Check if the response variable is close to normality
+
+```{r}
+library(e1071)
+par(mfrow = c(1, 2))  # divide graph area in 2 columns
+plot(density(cars$speed), main = "Density Plot: Speed", ylab = "Frequency", sub = paste("Skewness: ", round(e1071::skewness(cars$speed), 2)))   # density plot for speed
+polygon(density(cars$speed), col = "red")
+plot(density(cars$dist), main = "Density Plot: Distance", ylab = "Frequency", sub = paste("Skewness:", round(e1071::skewness(cars$dist), 2)))  # density plot for distance
+polygon(density(cars$dist), col = "red")
+```
+
+### Correlation
+
+- Defined as the statistical measure of the linear dependence of two variables. Can take values between -1 and 1.
+Closer to 1 indicates a strong positive correlation. An inverse relationship shows values closer to -1. 
+- Values close to 0 indicate weak relationship; should look for better descriptors.
+
+```{r}
+cor(cars$speed, cars$dist)   # calculate correlation between speed and distance
+```
+
+###Build Linear Model
+` lm() ` is the function for building linear models.
+
+```{r}
+linearMod <- lm(dist ~ speed, data = cars)  # build linear regression model on full data
+print(linearMod)
+```
+
+**dist = Intercept + (b * speed)**
+
+=> dist = -17.579 + 3.932 * speed
+
+### Linear Regression Diagnostics
+
+**MUST check for statisical significance before using model.**
+
+print summary stats for the linear model:
+```{r}
+summary(linearMod)  # model summary
+```
+
+
