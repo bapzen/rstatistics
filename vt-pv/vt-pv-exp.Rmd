@@ -1,0 +1,29 @@
+---
+title: "R Notebook"
+output: 
+        html_notebook:
+                theme: readable
+---
+
+
+```{r}
+library(tidyverse)
+library(lubridate)
+```
+
+```{r}
+actual <- read.csv("vt-pv-2006/Actual_44.35_-73.05_2006_DPV_28MW_5_Min.csv", stringsAsFactors = FALSE)
+
+```
+```{r}
+actual$LocalTime <- mdy_hm(actual$LocalTime, tz = "EST")
+```
+```{r}
+actualJune <- filter(actual, month(LocalTim) == 06)
+```
+
+```{r}
+ggplot(actualJune, mapping = aes(x = LocalTim, y = Power.MW.)) +
+        geom_line()
+```
+
